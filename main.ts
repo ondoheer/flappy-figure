@@ -2,7 +2,7 @@ import { Flappy } from "./entities/Flappy.js";
 
 class Game {
     canvas:any;
-    ctx:any;
+    ctx:CanvasRenderingContext2D;
   constructor(htmlTag) {
     this.canvas = document.getElementById(htmlTag);
     this.ctx = this.canvas.getContext("2d");
