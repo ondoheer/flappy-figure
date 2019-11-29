@@ -15,6 +15,9 @@ export class Flappy {
         ctx.fillStyle = this.color;
         ctx.fill();
     }
-    update() { }
+    update() {
+        this.x += this.xVelocity;
+        this.y += this.yVelocity + 1;
+    }
 }
 //# sourceMappingURL=Flappy.js.map

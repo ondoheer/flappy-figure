@@ -4,6 +4,10 @@ class Game {
         this.canvas = this.createCanvas(htmlTag);
         this.ctx = this.canvas.getContext("2d");
         this.lastRender = 0;
+        this.entities = {
+            character: new Flappy(150, 350, 30, 30, "red", 0),
+            poles: []
+        };
     }
     createCanvas(htmlTag) {
         const canvas = document.createElement("canvas");
@@ -30,13 +34,15 @@ class Game {
     /**
      * Takes care of all the updates
      */
-    update(progress) { }
+    update(progress) {
+        this.entities.character.update();
+    }
     /**
      * Draws all of the entities
      */
     draw() {
-        const flappy = new Flappy(150, 350, 30, 30, "red", 0);
-        flappy.draw(this.ctx);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.entities.character.draw(this.ctx);
     }
     loop(timestamp) {
         let progress = timestamp - this.lastRender;

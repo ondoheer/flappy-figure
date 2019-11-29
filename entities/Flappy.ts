@@ -33,5 +33,8 @@ export class Flappy implements Entity {
     ctx.fillStyle = this.color;
     ctx.fill();
   }
-  update() {}
+  update() {
+    this.x += this.xVelocity;
+    this.y += this.yVelocity + 1;
+  }
 }

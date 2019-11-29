@@ -4,10 +4,19 @@ class Game {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   lastRender: number;
+  entities: {
+    character: Flappy;
+    poles: any[];
+  };
+
   constructor(htmlTag: string) {
     this.canvas = this.createCanvas(htmlTag);
     this.ctx = this.canvas.getContext("2d");
     this.lastRender = 0;
+    this.entities = {
+      character: new Flappy(150, 350, 30, 30, "red", 0),
+      poles: []
+    };
   }
   private createCanvas(htmlTag: string): HTMLCanvasElement {
     const canvas = document.createElement("canvas");
@@ -28,6 +37,7 @@ class Game {
         console.log("salte");
       }
     });
+
     this.draw();
     window.requestAnimationFrame(this.loop.bind(this));
   }
@@ -35,14 +45,16 @@ class Game {
   /**
    * Takes care of all the updates
    */
-  private update(progress: number): void {}
+  private update(progress: number): void {
+    this.entities.character.update();
+  }
 
   /**
    * Draws all of the entities
    */
   private draw(): void {
-    const flappy = new Flappy(150, 350, 30, 30, "red", 0);
-    flappy.draw(this.ctx);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.entities.character.draw(this.ctx);
   }
 
   private loop(timestamp: number): void {
