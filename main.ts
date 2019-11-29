@@ -22,6 +22,12 @@ class Game {
    * Initializes the controls and loop
    */
   init(): void {
+    // Simple controls
+    window.addEventListener("keydown", e => {
+      if (e.keyCode == 32) {
+        console.log("salte");
+      }
+    });
     this.draw();
     window.requestAnimationFrame(this.loop.bind(this));
   }
