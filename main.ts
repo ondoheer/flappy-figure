@@ -1,17 +1,26 @@
 import { Flappy } from "./entities/Flappy.js";
 
 class Game {
-    canvas:any;
-    ctx:CanvasRenderingContext2D;
-  constructor(htmlTag) {
-    this.canvas = document.getElementById(htmlTag);
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  constructor(htmlTag: string) {
+    this.canvas = this.createCanvas(htmlTag);
+
     this.ctx = this.canvas.getContext("2d");
   }
-
+  private createCanvas(htmlTag: string): HTMLCanvasElement {
+    const canvas = document.createElement("canvas");
+    canvas.width = 900;
+    canvas.height = 600;
+    canvas.id = "mundo";
+    const parent = document.getElementById(htmlTag);
+    parent.appendChild(canvas);
+    return canvas;
+  }
   /**
    * Initializes the controls and loop
    */
-  init() {}
+  init(): void {}
 
   /**
    * Takes care of all the updates
@@ -27,5 +36,6 @@ class Game {
   }
 }
 
-const game = new Game("mundo");
+const game = new Game("game");
+
 game.draw();
