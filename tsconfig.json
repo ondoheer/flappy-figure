@@ -1,10 +1,11 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "module": "amd",
+        "module": "es2015",
         "target": "es2017",
-        "outFile": "./main.js",
-        "sourceMap": true
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "lib": ["dom","es2017"]
     },
     "files": [
         "main.ts",

@@ -16,3 +16,4 @@ export class Entity {
         ctx.fillCircle(this.x, this.y, this.width, this.height);
     }
 }
+//# sourceMappingURL=Entity.js.map
