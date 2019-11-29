@@ -1,0 +1,13 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "module": "amd",
+        "target": "es2017",
+        "outFile": "./main.js",
+        "sourceMap": true
+    },
+    "files": [
+        "main.ts",
+        
+    ],
+}
