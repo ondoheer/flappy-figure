@@ -1,10 +1,31 @@
 import { Entity } from "./Entity.js";
 
-export class Flappy extends Entity {
-  
+export class Flappy implements Entity {
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+  color: string;
+  speed: number;
+  xVelocity: number;
+  yVelocity: number;
 
-  constructor(x: number,y: number,height:number,width:number,color:string,speed:number, direction:string){
-    super(x,y,height,width,color,speed,direction)
+  constructor(
+    x: number,
+    y: number,
+    height: number,
+    width: number,
+    color: string,
+    speed: number
+  ) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.color = color;
+    this.speed = speed;
+    this.xVelocity = 0;
+    this.yVelocity = 0;
   }
   draw(ctx) {
     ctx.beginPath();
@@ -12,5 +33,5 @@ export class Flappy extends Entity {
     ctx.fillStyle = this.color;
     ctx.fill();
   }
-  
+  update() {}
 }

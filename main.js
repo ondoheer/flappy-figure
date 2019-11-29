@@ -3,6 +3,7 @@ class Game {
     constructor(htmlTag) {
         this.canvas = this.createCanvas(htmlTag);
         this.ctx = this.canvas.getContext("2d");
+        this.lastRender = 0;
     }
     createCanvas(htmlTag) {
         const canvas = document.createElement("canvas");
@@ -16,19 +17,40 @@ class Game {
     /**
      * Initializes the controls and loop
      */
-    init() { }
+    init() {
+        this.draw();
+        window.requestAnimationFrame(this.loop.bind(this));
+    }
     /**
      * Takes care of all the updates
      */
-    update() { }
+    update(progress) { }
     /**
      * Draws all of the entities
      */
     draw() {
-        const flappy = new Flappy(150, 350, 30, 30, "red", 0, "left");
+        const flappy = new Flappy(150, 350, 30, 30, "red", 0);
         flappy.draw(this.ctx);
+    }
+    loop(timestamp) {
+        let progress = timestamp - this.lastRender;
+        this.update(progress);
+        this.draw();
+        this.lastRender = timestamp;
+        const requestId = window.requestAnimationFrame(this.loop.bind(this));
+        /**
+         *
+        if (this.state.gameOver) {
+          this.gameOver();
+          window.cancelAnimationFrame(requestId);
+        } else if (this.winCondition()) {
+          this.gameWon();
+          window.cancelAnimationFrame(requestId);
+        }
+         Stops the game if it has ended
+         */
     }
 }
 const game = new Game("game");
-game.draw();
+game.init();
 //# sourceMappingURL=main.js.map

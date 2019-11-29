@@ -1,7 +1,13 @@
-import { Entity } from "./Entity.js";
-export class Flappy extends Entity {
-    constructor(x, y, height, width, color, speed, direction) {
-        super(x, y, height, width, color, speed, direction);
+export class Flappy {
+    constructor(x, y, height, width, color, speed) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+        this.speed = speed;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
     }
     draw(ctx) {
         ctx.beginPath();
@@ -9,5 +15,6 @@ export class Flappy extends Entity {
         ctx.fillStyle = this.color;
         ctx.fill();
     }
+    update() { }
 }
 //# sourceMappingURL=Flappy.js.map
