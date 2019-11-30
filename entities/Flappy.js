@@ -9,7 +9,7 @@ export class Flappy {
         this.speed = speed;
         this.xVelocity = 0;
         this.yVelocity = 0;
-        this.maxJumpHeight = 100;
+        this.maxJumpHeight = 75;
         this._state = {
             isJumping: false,
             lastJumpPosition: y

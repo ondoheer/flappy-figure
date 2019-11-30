@@ -8,10 +8,10 @@ class Game {
         this.ctx = this.canvas.getContext("2d");
         this.lastRender = 0;
         this.entities = {
-            character: new Flappy(150, 350, 30, 30, "red", 0.3),
+            character: new Flappy(this.canvas.width / 2 - 15, 350, 30, 30, "red", 0.3),
             poles: {
                 speed: 5,
-                items: new PolesGenerator().generate(10)
+                items: new PolesGenerator().generate(1)
             }
         };
         this.state = state;
@@ -57,6 +57,10 @@ class Game {
      */
     update(progress) {
         this.entities.character.update(this.ctx, progress);
+        console.log(this.checkCollision());
+        if (this.checkCollision()) {
+            this.entities.character.die();
+        }
         // manage poles
         this.spawnPole();
         this.removePole();
@@ -64,6 +68,7 @@ class Game {
         for (let i = 0; i < state.shownPoles.length; i++) {
             state.shownPoles[i].update(this.ctx, progress);
         }
+        this.skippedPole(this.entities.character);
     }
     /**
      * Draws all of the entities
@@ -93,6 +98,7 @@ class Game {
             const pole = state.shownPoles[i];
             if (pole.x > this.canvas.width) {
                 this.entities.poles.items.unshift(state.shownPoles.pop());
+                this.entities.poles.items[0].reconfigure();
             }
         }
     }
@@ -100,6 +106,31 @@ class Game {
         if (state.shownPoles.length === 0) {
             state.shownPoles.unshift(this.entities.poles.items.pop());
         }
+    }
+    updateScore() {
+        state.score += 1;
+    }
+    skippedPole(flappy) {
+        for (let i = 0; i < state.shownPoles.length; i++) {
+            if (flappy.x < state.shownPoles[i].x && !state.shownPoles[i].jumped) {
+                this.updateScore();
+                state.shownPoles[i].jumped = true;
+            }
+        }
+    }
+    checkCollision() {
+        const flappy = this.entities.character;
+        for (let i = 0; i < this.entities.poles.items.length; i++) {
+            const pole = this.entities.poles.items[i];
+            if (flappy.x < pole.x + pole.width &&
+                flappy.x + flappy.width > pole.x &&
+                flappy.y < pole.y + pole.height &&
+                flappy.y + flappy.height > pole.y) {
+                console.log("collisioned");
+                return true;
+            }
+        }
+        return false;
     }
 }
 const game = new Game("game");
