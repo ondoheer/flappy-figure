@@ -2,6 +2,8 @@ import { Flappy } from "./entities/Flappy.js";
 import { Pole } from "./entities/Pole.js";
 import { gameOver } from "./scenes/gameOver.js";
 import { state } from "./state.js";
+import { PolesGenerator } from "./generators/PoleGenerator.js";
+
 class Game {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
@@ -23,7 +25,7 @@ class Game {
       character: new Flappy(150, 350, 30, 30, "red", 0.3),
       poles: {
         speed: 5,
-        items: [new Pole(300, 100, "blue", 0.3)]
+        items: new PolesGenerator().generate(10)
       }
     };
     this.state = state;
@@ -72,6 +74,10 @@ class Game {
    */
   private update(progress: number): void {
     this.entities.character.update(this.ctx, progress);
+
+    for (let i = 0; i < this.entities.poles.items.length; i++) {
+      this.entities.poles.items[i].update(this.ctx, progress);
+    }
   }
 
   /**
@@ -82,7 +88,9 @@ class Game {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.drawScore();
     this.entities.character.draw(this.ctx);
-    this.entities.poles.items[0].draw(this.ctx);
+    for (let i = 0; i < this.entities.poles.items.length; i++) {
+      this.entities.poles.items[i].draw(this.ctx);
+    }
   }
 
   private loop(timestamp: number): void {

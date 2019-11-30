@@ -17,7 +17,7 @@ export class Pole implements Entity {
     this.height = height;
     this.color = color;
     this.speed = 0.3;
-    this.xVelocity = 0;
+    this.xVelocity = speed;
     this.yVelocity = 0;
   }
 
@@ -25,8 +25,8 @@ export class Pole implements Entity {
     this.xVelocity = this.speed;
   }
   update(ctx: CanvasRenderingContext2D, progress: number): void {
-    this.x += this.xVelocity;
-    this.y += this.yVelocity;
+    this.x += this.xVelocity * progress;
+    this.y += this.yVelocity * progress;
   }
   draw(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = this.color;

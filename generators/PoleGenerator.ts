@@ -5,10 +5,12 @@ interface EntityGenerator {
   (numberOfentities: number): Entity[];
 }
 
-export const PolesGenerator: EntityGenerator = (numOfEntities: number) => {
-  let poles: Pole[] = [];
-  for (let i = 0; i < numOfEntities; i++) {
-    poles.push(new Pole(300, 100, "blue", 0.3));
+export class PolesGenerator {
+  generate(numOfPoles: number): Pole[] {
+    let poles: Pole[] = [];
+    for (let i = 0; i < numOfPoles; i++) {
+      poles.push(new Pole(300, 100, "blue", 0.3));
+    }
+    return poles;
   }
-  return poles;
-};
+}
