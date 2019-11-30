@@ -1,5 +1,6 @@
 export const state = {
     score: 0,
-    lost: false
+    lost: false,
+    shownPoles: []
 };
 //# sourceMappingURL=state.js.map

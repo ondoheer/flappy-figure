@@ -57,8 +57,12 @@ class Game {
      */
     update(progress) {
         this.entities.character.update(this.ctx, progress);
-        for (let i = 0; i < this.entities.poles.items.length; i++) {
-            this.entities.poles.items[i].update(this.ctx, progress);
+        // manage poles
+        this.spawnPole();
+        this.removePole();
+        // update poles positions
+        for (let i = 0; i < state.shownPoles.length; i++) {
+            state.shownPoles[i].update(this.ctx, progress);
         }
     }
     /**
@@ -69,8 +73,8 @@ class Game {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawScore();
         this.entities.character.draw(this.ctx);
-        for (let i = 0; i < this.entities.poles.items.length; i++) {
-            this.entities.poles.items[i].draw(this.ctx);
+        for (let i = 0; i < state.shownPoles.length; i++) {
+            state.shownPoles[i].draw(this.ctx);
         }
     }
     loop(timestamp) {
@@ -82,6 +86,19 @@ class Game {
         if (state.lost) {
             gameOver(this.ctx, "Game Over", this.canvas.width / 2, this.canvas.height / 2);
             window.cancelAnimationFrame(requestId);
+        }
+    }
+    removePole() {
+        for (let i = 0; i < state.shownPoles.length; i++) {
+            const pole = state.shownPoles[i];
+            if (pole.x > this.canvas.width) {
+                this.entities.poles.items.push(state.shownPoles.pop());
+            }
+        }
+    }
+    spawnPole() {
+        if (state.shownPoles.length === 0) {
+            state.shownPoles.push(this.entities.poles.items.pop());
         }
     }
 }
