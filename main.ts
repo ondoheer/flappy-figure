@@ -120,13 +120,13 @@ class Game {
     for (let i = 0; i < state.shownPoles.length; i++) {
       const pole = state.shownPoles[i];
       if (pole.x > this.canvas.width) {
-        this.entities.poles.items.push(state.shownPoles.pop());
+        this.entities.poles.items.unshift(state.shownPoles.pop());
       }
     }
   }
   private spawnPole(): void {
     if (state.shownPoles.length === 0) {
-      state.shownPoles.push(this.entities.poles.items.pop());
+      state.shownPoles.unshift(this.entities.poles.items.pop());
     }
   }
 }
