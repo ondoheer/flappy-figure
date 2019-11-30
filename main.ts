@@ -1,4 +1,5 @@
 import { Flappy } from "./entities/Flappy.js";
+import { keydown } from "./controls.js";
 
 class Game {
   canvas: HTMLCanvasElement;
@@ -14,7 +15,7 @@ class Game {
     this.ctx = this.canvas.getContext("2d");
     this.lastRender = 0;
     this.entities = {
-      character: new Flappy(150, 350, 30, 30, "red", 0),
+      character: new Flappy(150, 350, 30, 30, "red", 3),
       poles: []
     };
   }
@@ -33,13 +34,23 @@ class Game {
   init(): void {
     // Simple controls
     window.addEventListener("keydown", e => {
-      if (e.keyCode == 32) {
-        console.log("salte");
-      }
+      this.handleInput(e);
     });
 
     this.draw();
     window.requestAnimationFrame(this.loop.bind(this));
+  }
+  handleInput(e): void {
+    switch (e.keyCode) {
+      case 32:
+        this.entities.character.jump();
+        break;
+      case 13:
+        break;
+
+      default:
+        break;
+    }
   }
 
   /**
