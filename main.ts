@@ -20,7 +20,7 @@ class Game {
     this.ctx = this.canvas.getContext("2d");
     this.lastRender = 0;
     this.entities = {
-      character: new Flappy(150, 350, 30, 30, "red", 3),
+      character: new Flappy(150, 350, 30, 30, "red", 0.3),
       poles: {
         speed: 5,
         items: [new Pole(300, 100, "blue", 0.3)]

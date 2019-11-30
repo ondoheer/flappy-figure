@@ -28,7 +28,7 @@ export class Flappy implements Entity {
     this.width = width;
     this.height = height;
     this.color = color;
-    this.speed = 0.3;
+    this.speed = speed;
     this.xVelocity = 0;
     this.yVelocity = 0;
     this.maxJumpHeight = 100;
