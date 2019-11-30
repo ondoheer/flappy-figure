@@ -5,5 +5,6 @@ export const gameOver = (
   y: number
 ): void => {
   ctx.font = "50px serif";
+  ctx.fillStyle = "#f00";
   ctx.fillText(text, x, y);
 };
