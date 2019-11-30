@@ -8,6 +8,6 @@ export interface Entity {
   yVelocity: number;
   xVelocity: number;
 
-  update(): void;
+  update(ctx: CanvasRenderingContext2D, progress: number): void;
   draw(ctx: CanvasRenderingContext2D): void;
 }

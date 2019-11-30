@@ -1,13 +1,12 @@
+import { state } from "../state.js";
 export class Flappy {
     constructor(x, y, height, width, color, speed) {
         this.x = x;
         this.y = y;
-        this.baseXAxis = x;
-        this.baseYAxis = y;
         this.width = width;
         this.height = height;
         this.color = color;
-        this.speed = speed;
+        this.speed = 0.3;
         this.xVelocity = 0;
         this.yVelocity = 0;
         this.maxJumpHeight = 100;
@@ -24,15 +23,20 @@ export class Flappy {
         }
     }
     reachedMaxJump() {
-        // starts y: 350
-        // lastJumpPosition: 350
-        // maxJumHeight: 100
-        console.log(`${this.y}  ${this._state.lastJumpPosition - this.maxJumpHeight}`);
         return this.y <= this._state.lastJumpPosition - this.maxJumpHeight;
     }
     fall() {
         this._state.isJumping = false;
         this.yVelocity = this.speed;
+    }
+    die() {
+        state.lost = true;
+    }
+    checkCollision(ctx) {
+        // check if hit the ground
+        if (this.y + this.height > ctx.canvas.height) {
+            this.die();
+        }
     }
     draw(ctx) {
         ctx.beginPath();
@@ -40,16 +44,18 @@ export class Flappy {
         ctx.fillStyle = this.color;
         ctx.fill();
     }
-    update() {
+    update(ctx, progress) {
+        this.checkCollision(ctx);
         if (this.reachedMaxJump()) {
-            console.log("reached max height");
             this.fall();
         }
-        if (!this.reachedMaxJump() && !this._state.isJumping) {
-            this.jump();
+        // comment this block if you don't want it to start falling
+        if (!this._state.isJumping) {
+            this.fall();
         }
-        this.y += this.yVelocity;
-        this.x += this.xVelocity;
+        // update position
+        this.y += this.yVelocity * progress;
+        this.x += this.xVelocity * progress;
     }
 }
 //# sourceMappingURL=Flappy.js.map

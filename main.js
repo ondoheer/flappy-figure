@@ -1,4 +1,7 @@
 import { Flappy } from "./entities/Flappy.js";
+import { Pole } from "./entities/Pole.js";
+import { gameOver } from "./scenes/gameOver.js";
+import { state } from "./state.js";
 class Game {
     constructor(htmlTag) {
         this.canvas = this.createCanvas(htmlTag);
@@ -6,8 +9,12 @@ class Game {
         this.lastRender = 0;
         this.entities = {
             character: new Flappy(150, 350, 30, 30, "red", 3),
-            poles: []
+            poles: {
+                speed: 5,
+                items: [new Pole(300, 100, "blue", 0.3)]
+            }
         };
+        this.state = state;
     }
     createCanvas(htmlTag) {
         const canvas = document.createElement("canvas");
@@ -29,6 +36,11 @@ class Game {
         this.draw();
         window.requestAnimationFrame(this.loop.bind(this));
     }
+    drawScore() {
+        this.ctx.font = "20px serif";
+        this.ctx.fillStyle = "#fff";
+        this.ctx.fillText(`Score: ${state.score}`, this.canvas.width - 120, 50);
+    }
     handleInput(e) {
         switch (e.keyCode) {
             case 32:
@@ -44,14 +56,17 @@ class Game {
      * Takes care of all the updates
      */
     update(progress) {
-        this.entities.character.update();
+        this.entities.character.update(this.ctx, progress);
     }
     /**
      * Draws all of the entities
      */
     draw() {
+        // clears the canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawScore();
         this.entities.character.draw(this.ctx);
+        this.entities.poles.items[0].draw(this.ctx);
     }
     loop(timestamp) {
         let progress = timestamp - this.lastRender;
@@ -59,17 +74,10 @@ class Game {
         this.draw();
         this.lastRender = timestamp;
         const requestId = window.requestAnimationFrame(this.loop.bind(this));
-        /**
-         *
-        if (this.state.gameOver) {
-          this.gameOver();
-          window.cancelAnimationFrame(requestId);
-        } else if (this.winCondition()) {
-          this.gameWon();
-          window.cancelAnimationFrame(requestId);
+        if (state.lost) {
+            gameOver(this.ctx, "Game Over", this.canvas.width / 2, this.canvas.height / 2);
+            window.cancelAnimationFrame(requestId);
         }
-         Stops the game if it has ended
-         */
     }
 }
 const game = new Game("game");

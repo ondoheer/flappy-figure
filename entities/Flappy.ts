@@ -1,10 +1,10 @@
 import { Entity } from "./Entity.js";
+import { state } from "../state.js";
 
 export class Flappy implements Entity {
   x: number;
   y: number;
-  baseYAxis: number;
-  baseXAxis: number;
+
   maxJumpHeight: number;
   height: number;
   width: number;
@@ -24,12 +24,11 @@ export class Flappy implements Entity {
   ) {
     this.x = x;
     this.y = y;
-    this.baseXAxis = x;
-    this.baseYAxis = y;
+
     this.width = width;
     this.height = height;
     this.color = color;
-    this.speed = speed;
+    this.speed = 0.3;
     this.xVelocity = 0;
     this.yVelocity = 0;
     this.maxJumpHeight = 100;
@@ -47,12 +46,6 @@ export class Flappy implements Entity {
   }
 
   reachedMaxJump(): boolean {
-    // starts y: 350
-    // lastJumpPosition: 350
-    // maxJumHeight: 100
-    console.log(
-      `${this.y}  ${this._state.lastJumpPosition - this.maxJumpHeight}`
-    );
     return this.y <= this._state.lastJumpPosition - this.maxJumpHeight;
   }
 
@@ -60,22 +53,33 @@ export class Flappy implements Entity {
     this._state.isJumping = false;
     this.yVelocity = this.speed;
   }
-  draw(ctx) {
+
+  die(): void {
+    state.lost = true;
+  }
+  checkCollision(ctx: CanvasRenderingContext2D): void {
+    // check if hit the ground
+    if (this.y + this.height > ctx.canvas.height) {
+      this.die();
+    }
+  }
+  draw(ctx: CanvasRenderingContext2D): void {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.height, 0, 2 * Math.PI, false);
     ctx.fillStyle = this.color;
     ctx.fill();
   }
-  update() {
+  update(ctx, progress): void {
+    this.checkCollision(ctx);
     if (this.reachedMaxJump()) {
-      console.log("reached max height");
       this.fall();
     }
-    if (!this.reachedMaxJump() && !this._state.isJumping) {
-      this.jump();
+    // comment this block if you don't want it to start falling
+    if (!this._state.isJumping) {
+      this.fall();
     }
-
-    this.y += this.yVelocity;
-    this.x += this.xVelocity;
+    // update position
+    this.y += this.yVelocity * progress;
+    this.x += this.xVelocity * progress;
   }
 }
