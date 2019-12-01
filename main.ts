@@ -81,7 +81,7 @@ class Game {
    */
   private update(progress: number): void {
     this.entities.character.update(this.ctx, progress);
-    console.log(this.checkCollision());
+
     if (this.checkCollision()) {
       this.entities.character.die();
     }
@@ -92,6 +92,7 @@ class Game {
     for (let i = 0; i < state.shownPoles.length; i++) {
       state.shownPoles[i].update(this.ctx, progress);
     }
+    // check if pole was skipped
     this.skippedPole(this.entities.character);
   }
 
@@ -159,12 +160,13 @@ class Game {
       const pole = this.entities.poles.items[i];
 
       if (
-        flappy.x < pole.x + pole.width &&
-        flappy.x + flappy.width > pole.x &&
-        flappy.y < pole.y + pole.height &&
-        flappy.y + flappy.height > pole.y
+        flappy.x <
+        pole.x + pole.width
+        // &&
+        // flappy.x + flappy.width > pole.x &&
+        // flappy.y < pole.y + pole.height &&
+        // flappy.y + flappy.height > pole.y
       ) {
-        console.log("collisioned");
         return true;
       }
     }
