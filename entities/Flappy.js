@@ -32,12 +32,6 @@ export class Flappy {
     die() {
         state.lost = true;
     }
-    checkCollision(ctx) {
-        // check if hit the ground
-        if (this.y + this.height > ctx.canvas.height) {
-            this.die();
-        }
-    }
     draw(ctx) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.height, 0, 2 * Math.PI, false);
@@ -45,7 +39,6 @@ export class Flappy {
         ctx.fill();
     }
     update(ctx, progress) {
-        this.checkCollision(ctx);
         if (this.reachedMaxJump()) {
             this.fall();
         }

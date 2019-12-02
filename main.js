@@ -1,4 +1,5 @@
 import { Flappy } from "./entities/Flappy.js";
+import { CollisionManager } from "./managers/CollisionManager.js";
 import { gameOver } from "./scenes/gameOver.js";
 import { state } from "./state.js";
 import { PolesGenerator } from "./generators/PoleGenerator.js";
@@ -11,10 +12,11 @@ class Game {
             character: new Flappy(this.canvas.width / 2 - 15, 350, 30, 30, "red", 0.3),
             poles: {
                 speed: 5,
-                items: new PolesGenerator().generate(1)
+                items: PolesGenerator.generate(1)
             }
         };
         this.state = state;
+        this.collisionManager = new CollisionManager(this.canvas, this.entities.character, this.entities.poles.items);
     }
     createCanvas(htmlTag) {
         const canvas = document.createElement("canvas");
@@ -57,9 +59,9 @@ class Game {
      */
     update(progress) {
         this.entities.character.update(this.ctx, progress);
-        if (this.checkCollision()) {
-            this.entities.character.die();
-        }
+        // check for collision
+        this.collisionManager.checkCollision();
+        console.log("update");
         // manage poles
         this.spawnPole();
         this.removePole();
@@ -117,22 +119,6 @@ class Game {
                 state.shownPoles[i].jumped = true;
             }
         }
-    }
-    checkCollision() {
-        const flappy = this.entities.character;
-        for (let i = 0; i < this.entities.poles.items.length; i++) {
-            const pole = this.entities.poles.items[i];
-            if (flappy.x <
-                pole.x + pole.width
-            // &&
-            // flappy.x + flappy.width > pole.x &&
-            // flappy.y < pole.y + pole.height &&
-            // flappy.y + flappy.height > pole.y
-            ) {
-                return true;
-            }
-        }
-        return false;
     }
 }
 const game = new Game("game");

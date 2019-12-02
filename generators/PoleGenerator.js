@@ -1,6 +1,6 @@
 import { Pole } from "../entities/Pole.js";
 export class PolesGenerator {
-    generate(numOfPoles) {
+    static generate(numOfPoles) {
         let poles = [];
         for (let i = 0; i < numOfPoles; i++) {
             const pole = new Pole(Pole.generateHeight(), 75, "blue", 0.3);

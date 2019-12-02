@@ -57,12 +57,7 @@ export class Flappy implements Entity {
   die(): void {
     state.lost = true;
   }
-  checkCollision(ctx: CanvasRenderingContext2D): void {
-    // check if hit the ground
-    if (this.y + this.height > ctx.canvas.height) {
-      this.die();
-    }
-  }
+  
   draw(ctx: CanvasRenderingContext2D): void {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.height, 0, 2 * Math.PI, false);
@@ -70,7 +65,7 @@ export class Flappy implements Entity {
     ctx.fill();
   }
   update(ctx, progress): void {
-    this.checkCollision(ctx);
+    
     if (this.reachedMaxJump()) {
       this.fall();
     }

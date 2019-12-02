@@ -6,7 +6,7 @@ interface EntityGenerator {
 }
 
 export class PolesGenerator {
-  generate(numOfPoles: number): Pole[] {
+  static generate(numOfPoles: number): Pole[] {
     let poles: Pole[] = [];
     for (let i = 0; i < numOfPoles; i++) {
       const pole = new Pole(Pole.generateHeight(), 75, "blue", 0.3);
