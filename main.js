@@ -16,7 +16,7 @@ class Game {
             }
         };
         this.state = state;
-        this.collisionManager = new CollisionManager(this.canvas, this.entities.character, this.entities.poles.items);
+        this.collisionManager = new CollisionManager(this.canvas, this.entities.character, state.shownPoles);
     }
     createCanvas(htmlTag) {
         const canvas = document.createElement("canvas");

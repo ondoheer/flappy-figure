@@ -16,15 +16,12 @@ export class CollisionManager {
     checkPolesCollision() {
         for (let i = 0; i < this.poles.length; i++) {
             const pole = this.poles[i];
-            console.log(`poleX ${pole.x}`);
             if (this.flappy.x <
                 pole.x + pole.width
-            // &&
-            // flappy.x + flappy.width > pole.x &&
-            // flappy.y < pole.y + pole.height &&
-            // flappy.y + flappy.height > pole.y
-            ) {
-                console.log("hit me");
+                &&
+                    this.flappy.x + this.flappy.width > pole.x &&
+                this.flappy.y < pole.y + pole.height &&
+                this.flappy.y + this.flappy.height > pole.y) {
                 this.flappy.die();
             }
         }
