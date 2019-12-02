@@ -1,5 +1,6 @@
 import { Entity } from "./Entity.js";
 import { state } from "../state.js";
+import { CONFIG } from "../config.js";
 
 export class Flappy implements Entity {
   x: number;
@@ -14,17 +15,7 @@ export class Flappy implements Entity {
   yVelocity: number;
   _state: { isJumping: boolean; lastJumpPosition: number };
 
-  constructor(
-    x: number,
-    y: number,
-    height: number,
-    width: number,
-    color: string,
-    speed: number
-  ) {
-    this.x = x;
-    this.y = y;
-
+  constructor(height: number, width: number, color: string, speed: number) {
     this.width = width;
     this.height = height;
     this.color = color;
@@ -32,11 +23,18 @@ export class Flappy implements Entity {
     this.xVelocity = 0;
     this.yVelocity = 0;
     this.maxJumpHeight = 75;
+    this.place(CONFIG.canvas.width / 2 - this.width / 2, 350);
     this._state = {
       isJumping: false,
-      lastJumpPosition: y
+      lastJumpPosition: this.y
     };
   }
+
+  place(x: number, y: number): void {
+    this.x = x;
+    this.y = y;
+  }
+
   jump(): void {
     if (!this.reachedMaxJump()) {
       this._state.isJumping = true;
@@ -57,7 +55,7 @@ export class Flappy implements Entity {
   die(): void {
     state.lost = true;
   }
-  
+
   draw(ctx: CanvasRenderingContext2D): void {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.height, 0, 2 * Math.PI, false);
@@ -65,7 +63,6 @@ export class Flappy implements Entity {
     ctx.fill();
   }
   update(ctx, progress): void {
-    
     if (this.reachedMaxJump()) {
       this.fall();
     }

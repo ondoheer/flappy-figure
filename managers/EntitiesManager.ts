@@ -1,19 +1,58 @@
 import { Flappy } from "../entities/Flappy.js";
 import { Pole } from "../entities/Pole.js";
+import { PolesGenerator } from "../generators/PoleGenerator.js";
+import { CONFIG } from "../config.js";
+import { state } from "../state.js";
 
 interface GameEntities {
-    character: Flappy,
-    poles: Pole[]
+  character: Flappy;
+  poles: Pole[];
 }
 
 interface EntitiesManagerInterface {
-    instantiateEntities(): GameEntities
-    spawnEntities(): void;
+  instantiateEntities(): GameEntities;
+  spawnOrRemoveEntities(entities: GameEntities): void;
 }
 
 export class EntitiesManager implements EntitiesManagerInterface {
-    instantiateEntities(): GameEntities {
-        return
+  instantiateEntities(): GameEntities {
+    const flappy = new Flappy(
+      CONFIG.entities.character.height,
+      CONFIG.entities.character.width,
+      CONFIG.entities.character.color,
+      CONFIG.entities.character.baseSpeed
+    );
+    const poles = PolesGenerator.generate(CONFIG.entities.poles.num_poles);
+    return { character: flappy, poles: poles };
+  }
+  spawnOrRemoveEntities(entities: GameEntities): void {
+    this.spawnPole(entities.poles);
+    this.removePole(entities.poles);
+  }
+
+  private removePole(poles: Pole[]): void {
+    for (let i = 0; i < state.shownPoles.length; i++) {
+      const pole = state.shownPoles[i];
+      if (pole.x > CONFIG.canvas.width) {
+        poles.unshift(state.shownPoles.pop());
+        poles[0].reconfigure();
+      }
     }
-    spawnEntities(): void { }
+  }
+  private spawnPole(poles: Pole[]): void {
+    if (state.shownPoles.length === 0) {
+      state.shownPoles.unshift(poles.pop());
+    }
+  }
+
+  skippedPole(flappy: Flappy): boolean {
+    for (let i = 0; i < state.shownPoles.length; i++) {
+      if (flappy.x < state.shownPoles[i].x && !state.shownPoles[i].jumped) {
+        state.shownPoles[i].jumped = true;
+
+        return true;
+      }
+    }
+    return false;
+  }
 }

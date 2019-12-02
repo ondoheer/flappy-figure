@@ -1,8 +1,7 @@
 import { state } from "../state.js";
+import { CONFIG } from "../config.js";
 export class Flappy {
-    constructor(x, y, height, width, color, speed) {
-        this.x = x;
-        this.y = y;
+    constructor(height, width, color, speed) {
         this.width = width;
         this.height = height;
         this.color = color;
@@ -10,10 +9,15 @@ export class Flappy {
         this.xVelocity = 0;
         this.yVelocity = 0;
         this.maxJumpHeight = 75;
+        this.place(CONFIG.canvas.width / 2 - this.width / 2, 350);
         this._state = {
             isJumping: false,
-            lastJumpPosition: y
+            lastJumpPosition: this.y
         };
+    }
+    place(x, y) {
+        this.x = x;
+        this.y = y;
     }
     jump() {
         if (!this.reachedMaxJump()) {

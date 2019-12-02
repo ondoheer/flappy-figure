@@ -1,8 +1,8 @@
-import { Flappy } from "./entities/Flappy.js";
 import { CollisionManager } from "./managers/CollisionManager.js";
 import { gameOver } from "./scenes/gameOver.js";
 import { state } from "./state.js";
-import { PolesGenerator } from "./generators/PoleGenerator.js";
+import { CONFIG } from "./config.js";
+import { EntitiesManager } from "./managers/EntitiesManager.js";
 class Game {
     constructor(htmlId) {
         this.htmlId = htmlId;
@@ -15,9 +15,9 @@ class Game {
     }
     createCanvas(htmlTag) {
         const canvas = document.createElement("canvas");
-        canvas.width = 900;
-        canvas.height = 600;
-        canvas.id = "mundo";
+        canvas.width = CONFIG.canvas.width;
+        canvas.height = CONFIG.canvas.height;
+        canvas.id = CONFIG.canvas.id;
         const parent = document.getElementById(htmlTag);
         parent.appendChild(canvas);
         this.canvas = canvas;
@@ -30,9 +30,9 @@ class Game {
         // generate canvas
         this.createCanvas("game");
         // generate entities
-        this.entities.character = new Flappy(this.canvas.width / 2 - 15, 350, 30, 30, "red", 0.3);
-        this.entities.poles = PolesGenerator.generate(1);
-        // start collision manager 
+        this.entitiesManager = new EntitiesManager();
+        this.entities = new EntitiesManager().instantiateEntities();
+        // start collision manager
         // this should be dependency injected but it's not
         this.collisionManager = new CollisionManager(this.canvas, this.entities.character, state.shownPoles);
         // Simple controls
@@ -50,10 +50,10 @@ class Game {
     }
     handleInput(e) {
         switch (e.keyCode) {
-            case 32:
+            case 32: // space
                 this.entities.character.jump();
                 break;
-            case 13:
+            case 13: // enter
                 break;
             default:
                 break;
@@ -63,18 +63,20 @@ class Game {
      * Takes care of all the updates
      */
     update(progress) {
+        // update Character state
         this.entities.character.update(this.ctx, progress);
         // check for collision
         this.collisionManager.checkCollisions();
-        // manage poles
-        this.spawnPole();
-        this.removePole();
         // update poles positions
         for (let i = 0; i < state.shownPoles.length; i++) {
             state.shownPoles[i].update(this.ctx, progress);
         }
         // check if pole was skipped
-        this.skippedPole(this.entities.character);
+        if (this.entitiesManager.skippedPole(this.entities.character)) {
+            this.updateScore();
+        }
+        // manage poles
+        this.entitiesManager.spawnOrRemoveEntities(this.entities);
     }
     /**
      * Draws all of the entities
@@ -101,35 +103,6 @@ class Game {
         if (state.lost) {
             gameOver(this.ctx, "Game Over", this.canvas.width / 2, this.canvas.height / 2);
             window.cancelAnimationFrame(requestId);
-        }
-    }
-    /**
-     * Poles Logic
-     */
-    removePole() {
-        for (let i = 0; i < state.shownPoles.length; i++) {
-            const pole = state.shownPoles[i];
-            if (pole.x > this.canvas.width) {
-                this.entities.poles.unshift(state.shownPoles.pop());
-                this.entities.poles[0].reconfigure();
-            }
-        }
-    }
-    spawnPole() {
-        if (state.shownPoles.length === 0) {
-            state.shownPoles.unshift(this.entities.poles.pop());
-        }
-    }
-    /**
-     * Score logic
-     * @param flappy
-     */
-    skippedPole(flappy) {
-        for (let i = 0; i < state.shownPoles.length; i++) {
-            if (flappy.x < state.shownPoles[i].x && !state.shownPoles[i].jumped) {
-                this.updateScore();
-                state.shownPoles[i].jumped = true;
-            }
         }
     }
     updateScore() {
