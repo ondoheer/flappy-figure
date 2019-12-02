@@ -1,7 +1,12 @@
 import { Flappy } from "../entities/Flappy.js";
 import { Pole } from "../entities/Pole.js";
 
-export class CollisionManager {
+interface CollisionManagerInterface {
+    checkCollisions(): void
+}
+
+
+export class CollisionManager implements CollisionManagerInterface {
 
     canvas: HTMLCanvasElement;
     flappy: Flappy;
@@ -12,12 +17,12 @@ export class CollisionManager {
         this.flappy = flappy;
         this.poles = poles;
     }
-    checkCollision() {
+    checkCollisions(): void {
         this.checkFloorCollision();
         this.checkPolesCollision();
     }
 
-    private checkFloorCollision() {
+    private checkFloorCollision(): void {
 
         if (this.flappy.y + this.flappy.height > this.canvas.height) {
             this.flappy.die();

@@ -5,58 +5,62 @@ import { state } from "./state.js";
 import { PolesGenerator } from "./generators/PoleGenerator.js";
 
 class Game {
+  htmlId: string
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   lastRender: number;
   state: any;
   entities: {
     character: Flappy;
-    poles: {
-      speed: number;
-      items: any[];
-    };
+    poles: any[]
   };
   collisionManager: CollisionManager
 
-  constructor(htmlTag: string) {
-    this.canvas = this.createCanvas(htmlTag);
-    this.ctx = this.canvas.getContext("2d");
+  constructor(htmlId: string) {
+
+    this.htmlId = htmlId;
     this.lastRender = 0;
     this.entities = {
-      character: new Flappy(
-        this.canvas.width / 2 - 15,
-        350,
-        30,
-        30,
-        "red",
-        0.3
-      ),
-      poles: {
-        speed: 5,
-        items: PolesGenerator.generate(1)
-      }
+      character: null,
+      poles: []
     };
     this.state = state;
-    this.collisionManager = new CollisionManager(this.canvas, this.entities.character, state.shownPoles);
+
   }
-  private createCanvas(htmlTag: string): HTMLCanvasElement {
+  private createCanvas(htmlTag: string): void {
     const canvas = document.createElement("canvas");
     canvas.width = 900;
     canvas.height = 600;
     canvas.id = "mundo";
     const parent = document.getElementById(htmlTag);
     parent.appendChild(canvas);
-    return canvas;
+    this.canvas = canvas;
+    this.ctx = this.canvas.getContext("2d");
   }
   /**
-   * Initializes the controls and loop
+   * Initializes everything
    */
   init(): void {
+    // generate canvas
+    this.createCanvas("game");
+    // generate entities
+    this.entities.character = new Flappy(
+      this.canvas.width / 2 - 15,
+      350,
+      30,
+      30,
+      "red",
+      0.3
+    );
+    this.entities.poles = PolesGenerator.generate(1);
+    // start collision manager 
+    // this should be dependency injected but it's not
+    this.collisionManager = new CollisionManager(this.canvas, this.entities.character, state.shownPoles);
     // Simple controls
     window.addEventListener("keydown", e => {
       this.handleInput(e);
     });
-
+    // Draw the elements
     this.draw();
     window.requestAnimationFrame(this.loop.bind(this));
   }
@@ -84,8 +88,8 @@ class Game {
   private update(progress: number): void {
     this.entities.character.update(this.ctx, progress);
     // check for collision
-    this.collisionManager.checkCollision();
-    console.log("update");
+    this.collisionManager.checkCollisions();
+
     // manage poles
     this.spawnPole();
     this.removePole();
@@ -109,7 +113,10 @@ class Game {
       state.shownPoles[i].draw(this.ctx);
     }
   }
-
+  /**
+   * 
+   * @param timestamp The game loop
+   */
   private loop(timestamp: number): void {
     let progress = timestamp - this.lastRender;
 
@@ -129,24 +136,28 @@ class Game {
       window.cancelAnimationFrame(requestId);
     }
   }
+  /**
+   * Poles Logic
+   */
   private removePole(): void {
     for (let i = 0; i < state.shownPoles.length; i++) {
       const pole = state.shownPoles[i];
       if (pole.x > this.canvas.width) {
-        this.entities.poles.items.unshift(state.shownPoles.pop());
-        this.entities.poles.items[0].reconfigure();
+        this.entities.poles.unshift(state.shownPoles.pop());
+        this.entities.poles[0].reconfigure();
       }
     }
   }
   private spawnPole(): void {
     if (state.shownPoles.length === 0) {
-      state.shownPoles.unshift(this.entities.poles.items.pop());
+      state.shownPoles.unshift(this.entities.poles.pop());
     }
   }
-  private updateScore(): void {
-    state.score += 1;
-  }
 
+  /**
+   * Score logic
+   * @param flappy 
+   */
   private skippedPole(flappy: Flappy): void {
     for (let i = 0; i < state.shownPoles.length; i++) {
       if (flappy.x < state.shownPoles[i].x && !state.shownPoles[i].jumped) {
@@ -156,6 +167,9 @@ class Game {
     }
   }
 
+  private updateScore(): void {
+    state.score += 1;
+  }
 }
 
 const game = new Game("game");

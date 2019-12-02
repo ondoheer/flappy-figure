@@ -4,7 +4,7 @@ export class CollisionManager {
         this.flappy = flappy;
         this.poles = poles;
     }
-    checkCollision() {
+    checkCollisions() {
         this.checkFloorCollision();
         this.checkPolesCollision();
     }
