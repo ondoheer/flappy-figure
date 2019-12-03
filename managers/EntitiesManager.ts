@@ -9,9 +9,12 @@ interface GameEntities {
   poles: Pole[];
 }
 
-interface EntitiesManagerInterface {
+export interface EntitiesManagerInterface {
   instantiateEntities(): GameEntities;
   spawnOrRemoveEntities(entities: GameEntities): void;
+  removePole(poles: Pole[]): void;
+  spawnPole(poles: Pole[]): void;
+  skippedPole(flappy: Flappy): boolean;
 }
 
 export class EntitiesManager implements EntitiesManagerInterface {
@@ -30,7 +33,7 @@ export class EntitiesManager implements EntitiesManagerInterface {
     this.removePole(entities.poles);
   }
 
-  private removePole(poles: Pole[]): void {
+  removePole(poles: Pole[]): void {
     for (let i = 0; i < state.shownPoles.length; i++) {
       const pole = state.shownPoles[i];
       if (pole.x > CONFIG.canvas.width) {
@@ -39,7 +42,7 @@ export class EntitiesManager implements EntitiesManagerInterface {
       }
     }
   }
-  private spawnPole(poles: Pole[]): void {
+  spawnPole(poles: Pole[]): void {
     if (state.shownPoles.length === 0) {
       state.shownPoles.unshift(poles.pop());
     }

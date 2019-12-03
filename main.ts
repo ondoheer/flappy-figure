@@ -4,7 +4,10 @@ import { gameOver } from "./scenes/gameOver.js";
 import { state } from "./state.js";
 import { PolesGenerator } from "./generators/PoleGenerator.js";
 import { CONFIG } from "./config.js";
-import { EntitiesManager } from "./managers/EntitiesManager.js";
+import {
+  EntitiesManager,
+  EntitiesManagerInterface
+} from "./managers/EntitiesManager.js";
 
 class Game {
   htmlId: string;
@@ -17,7 +20,7 @@ class Game {
     poles: any[];
   };
   collisionManager: CollisionManager;
-  entitiesManager: EntitiesManager;
+  entitiesManager: EntitiesManagerInterface;
 
   constructor(htmlId: string) {
     this.htmlId = htmlId;
