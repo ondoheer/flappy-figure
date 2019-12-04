@@ -2,7 +2,12 @@ import { Flappy } from "../entities/Flappy.js";
 import { PolesGenerator } from "../generators/PoleGenerator.js";
 import { CONFIG } from "../config.js";
 import { state } from "../state.js";
-export class EntitiesManager {
+export class EntitiesManagerFactory {
+    static generateEntitiesManager() {
+        return new EntitiesManager();
+    }
+}
+class EntitiesManager {
     instantiateEntities() {
         const flappy = new Flappy(CONFIG.entities.character.height, CONFIG.entities.character.width, CONFIG.entities.character.color, CONFIG.entities.character.baseSpeed);
         const poles = PolesGenerator.generate(CONFIG.entities.poles.num_poles);

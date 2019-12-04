@@ -2,7 +2,7 @@ import { CollisionManager } from "./managers/CollisionManager.js";
 import { gameOver } from "./scenes/gameOver.js";
 import { state } from "./state.js";
 import { CONFIG } from "./config.js";
-import { EntitiesManager } from "./managers/EntitiesManager.js";
+import { EntitiesManagerFactory } from "./managers/EntitiesManager.js";
 class Game {
     constructor(htmlId) {
         this.htmlId = htmlId;
@@ -30,8 +30,8 @@ class Game {
         // generate canvas
         this.createCanvas("game");
         // generate entities
-        this.entitiesManager = new EntitiesManager();
-        this.entities = new EntitiesManager().instantiateEntities();
+        this.entitiesManager = EntitiesManagerFactory.generateEntitiesManager();
+        this.entities = this.entitiesManager.instantiateEntities();
         // start collision manager
         // this should be dependency injected but it's not
         this.collisionManager = new CollisionManager(this.canvas, this.entities.character, state.shownPoles);

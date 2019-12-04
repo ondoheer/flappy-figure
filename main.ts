@@ -5,7 +5,7 @@ import { state } from "./state.js";
 import { PolesGenerator } from "./generators/PoleGenerator.js";
 import { CONFIG } from "./config.js";
 import {
-  EntitiesManager,
+  EntitiesManagerFactory,
   EntitiesManagerInterface
 } from "./managers/EntitiesManager.js";
 
@@ -48,8 +48,8 @@ class Game {
     // generate canvas
     this.createCanvas("game");
     // generate entities
-    this.entitiesManager = new EntitiesManager();
-    this.entities = new EntitiesManager().instantiateEntities();
+    this.entitiesManager = EntitiesManagerFactory.generateEntitiesManager();
+    this.entities = this.entitiesManager.instantiateEntities();
 
     // start collision manager
     // this should be dependency injected but it's not

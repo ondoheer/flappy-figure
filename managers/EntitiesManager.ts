@@ -17,7 +17,13 @@ export interface EntitiesManagerInterface {
   skippedPole(flappy: Flappy): boolean;
 }
 
-export class EntitiesManager implements EntitiesManagerInterface {
+export class EntitiesManagerFactory {
+  static generateEntitiesManager() {
+    return new EntitiesManager();
+  }
+}
+
+class EntitiesManager implements EntitiesManagerInterface {
   instantiateEntities(): GameEntities {
     const flappy = new Flappy(
       CONFIG.entities.character.height,
