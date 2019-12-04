@@ -7,16 +7,7 @@ export class EntitiesManagerFactory {
         return new EntitiesManager();
     }
 }
-class EntitiesManager {
-    instantiateEntities() {
-        const flappy = new Flappy(CONFIG.entities.character.height, CONFIG.entities.character.width, CONFIG.entities.character.color, CONFIG.entities.character.baseSpeed);
-        const poles = PolesGenerator.generate(CONFIG.entities.poles.num_poles);
-        return { character: flappy, poles: poles };
-    }
-    spawnOrRemoveEntities(entities) {
-        this.spawnPole(entities.poles);
-        this.removePole(entities.poles);
-    }
+class PolesManager {
     removePole(poles) {
         for (let i = 0; i < state.shownPoles.length; i++) {
             const pole = state.shownPoles[i];
@@ -39,6 +30,17 @@ class EntitiesManager {
             }
         }
         return false;
+    }
+}
+class EntitiesManager extends PolesManager {
+    instantiateEntities() {
+        const flappy = new Flappy(CONFIG.entities.character.height, CONFIG.entities.character.width, CONFIG.entities.character.color, CONFIG.entities.character.baseSpeed);
+        const poles = PolesGenerator.generate(CONFIG.entities.poles.num_poles);
+        return { character: flappy, poles: poles };
+    }
+    spawnOrRemoveEntities(entities) {
+        this.spawnPole(entities.poles);
+        this.removePole(entities.poles);
     }
 }
 //# sourceMappingURL=EntitiesManager.js.map

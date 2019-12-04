@@ -4,7 +4,7 @@ import { Pole } from "../entities/Pole.js";
 export interface CollisionManagerInterface {
   checkCollisions(): void;
   checkFloorCollision(): void;
-  checkPolesCollision(): void;
+  checkEnemiesCollision(): void;
 }
 
 export class CollisionManagerFactory {
@@ -28,7 +28,7 @@ class CollisionManager implements CollisionManagerInterface {
   }
   checkCollisions(): void {
     this.checkFloorCollision();
-    this.checkPolesCollision();
+    this.checkEnemiesCollision();
   }
 
   checkFloorCollision(): void {
@@ -37,7 +37,7 @@ class CollisionManager implements CollisionManagerInterface {
     }
   }
 
-  checkPolesCollision(): void {
+  checkEnemiesCollision(): void {
     for (let i = 0; i < this.poles.length; i++) {
       const pole = this.poles[i];
 

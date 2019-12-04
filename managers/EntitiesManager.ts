@@ -12,6 +12,9 @@ interface GameEntities {
 export interface EntitiesManagerInterface {
   instantiateEntities(): GameEntities;
   spawnOrRemoveEntities(entities: GameEntities): void;
+}
+
+interface ManagePolesInterface {
   removePole(poles: Pole[]): void;
   spawnPole(poles: Pole[]): void;
   skippedPole(flappy: Flappy): boolean;
@@ -23,22 +26,7 @@ export class EntitiesManagerFactory {
   }
 }
 
-class EntitiesManager implements EntitiesManagerInterface {
-  instantiateEntities(): GameEntities {
-    const flappy = new Flappy(
-      CONFIG.entities.character.height,
-      CONFIG.entities.character.width,
-      CONFIG.entities.character.color,
-      CONFIG.entities.character.baseSpeed
-    );
-    const poles = PolesGenerator.generate(CONFIG.entities.poles.num_poles);
-    return { character: flappy, poles: poles };
-  }
-  spawnOrRemoveEntities(entities: GameEntities): void {
-    this.spawnPole(entities.poles);
-    this.removePole(entities.poles);
-  }
-
+class PolesManager {
   removePole(poles: Pole[]): void {
     for (let i = 0; i < state.shownPoles.length; i++) {
       const pole = state.shownPoles[i];
@@ -63,5 +51,22 @@ class EntitiesManager implements EntitiesManagerInterface {
       }
     }
     return false;
+  }
+}
+
+class EntitiesManager extends PolesManager implements EntitiesManagerInterface {
+  instantiateEntities(): GameEntities {
+    const flappy = new Flappy(
+      CONFIG.entities.character.height,
+      CONFIG.entities.character.width,
+      CONFIG.entities.character.color,
+      CONFIG.entities.character.baseSpeed
+    );
+    const poles = PolesGenerator.generate(CONFIG.entities.poles.num_poles);
+    return { character: flappy, poles: poles };
+  }
+  spawnOrRemoveEntities(entities: GameEntities): void {
+    this.spawnPole(entities.poles);
+    this.removePole(entities.poles);
   }
 }

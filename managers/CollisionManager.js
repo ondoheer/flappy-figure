@@ -11,14 +11,14 @@ class CollisionManager {
     }
     checkCollisions() {
         this.checkFloorCollision();
-        this.checkPolesCollision();
+        this.checkEnemiesCollision();
     }
     checkFloorCollision() {
         if (this.flappy.y + this.flappy.height > this.canvas.height) {
             this.flappy.die();
         }
     }
-    checkPolesCollision() {
+    checkEnemiesCollision() {
         for (let i = 0; i < this.poles.length; i++) {
             const pole = this.poles[i];
             if (this.flappy.x < pole.x + pole.width &&
