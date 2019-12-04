@@ -1,4 +1,4 @@
-import { CollisionManager } from "./managers/CollisionManager.js";
+import { CollisionManagerFactory } from "./managers/CollisionManager.js";
 import { gameOver } from "./scenes/gameOver.js";
 import { state } from "./state.js";
 import { CONFIG } from "./config.js";
@@ -34,7 +34,7 @@ class Game {
         this.entities = this.entitiesManager.instantiateEntities();
         // start collision manager
         // this should be dependency injected but it's not
-        this.collisionManager = new CollisionManager(this.canvas, this.entities.character, state.shownPoles);
+        this.collisionManager = CollisionManagerFactory.generateCollisionManager(this.canvas, this.entities.character, state.shownPoles);
         // Simple controls
         window.addEventListener("keydown", e => {
             this.handleInput(e);

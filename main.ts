@@ -1,5 +1,8 @@
 import { Flappy } from "./entities/Flappy.js";
-import { CollisionManager } from "./managers/CollisionManager.js";
+import {
+  CollisionManagerFactory,
+  CollisionManagerInterface
+} from "./managers/CollisionManager.js";
 import { gameOver } from "./scenes/gameOver.js";
 import { state } from "./state.js";
 import { PolesGenerator } from "./generators/PoleGenerator.js";
@@ -19,7 +22,7 @@ class Game {
     character: Flappy;
     poles: any[];
   };
-  collisionManager: CollisionManager;
+  collisionManager: CollisionManagerInterface;
   entitiesManager: EntitiesManagerInterface;
 
   constructor(htmlId: string) {
@@ -53,7 +56,7 @@ class Game {
 
     // start collision manager
     // this should be dependency injected but it's not
-    this.collisionManager = new CollisionManager(
+    this.collisionManager = CollisionManagerFactory.generateCollisionManager(
       this.canvas,
       this.entities.character,
       state.shownPoles
